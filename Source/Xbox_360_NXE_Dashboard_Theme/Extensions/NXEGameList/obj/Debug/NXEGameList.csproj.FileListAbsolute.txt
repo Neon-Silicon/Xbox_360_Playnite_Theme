@@ -1,0 +1,15 @@
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.csproj.AssemblyReference.cache
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\GameCarouselControl.baml
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameListSettingsView.baml
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\GameCarouselControl.g.cs
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameListSettingsView.g.cs
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList_MarkupCompile.cache
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.g.resources
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.AssemblyInfoInputs.cache
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.AssemblyInfo.cs
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.csproj.CoreCompileInputs.cache
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\bin\Debug\NXEGameList.dll
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\bin\Debug\NXEGameList.pdb
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.dll
+C:\Users\watki\AppData\Local\Playnite\Themes\Fullscreen\Test\Extensions\NXEGameList\obj\Debug\NXEGameList.pdb

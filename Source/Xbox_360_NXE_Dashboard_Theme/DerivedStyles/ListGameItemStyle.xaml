@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                    mc:Ignorable="d">
+
+    <Style x:Key="ListGameItemStyle" TargetType="ListBoxItem">        
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="250" />
+        <Setter Property="MinHeight" Value="380" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid Margin="{Settings FullscreenItemSpacingMargin}"
+                          d:DataContext="{x:Static DesignMainViewModel.DesignSelectedGameIntance}">
+                        <Border x:Name="TileBackground" CornerRadius="8" Margin="0"
+                                Background="#44000000">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="2" Opacity="0.3" Color="Black" BlurRadius="4"/>
+                            </Border.Effect>
+                        </Border>
+                        <ContentPresenter />
+                        <Border x:Name="MainBorder" BorderThickness="4" BorderBrush="#00FF00"
+                                Margin="0" Visibility="Collapsed" CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="0" Opacity="0.8" Color="#00FF00" BlurRadius="15"/>
+                            </Border.Effect>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="Visibility" Value="Visible" TargetName="MainBorder" />
+                            <Setter Property="Canvas.ZIndex" Value="90" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
