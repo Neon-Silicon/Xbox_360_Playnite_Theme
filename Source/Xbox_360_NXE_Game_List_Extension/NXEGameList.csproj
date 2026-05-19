@@ -16,5 +16,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Xaml" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 </Project>

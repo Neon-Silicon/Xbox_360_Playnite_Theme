@@ -168,9 +168,10 @@ namespace NXEGameList
 
         public string CurrentFilterName
         {
-            get 
-            { 
+            get
+            {
                 if (filters == null || filters.Count == 0) return "All Games";
+                if (currentFilterIndex < 0 || currentFilterIndex >= filters.Count) return "All Games";
                 return filters[currentFilterIndex].Name;
             }
         }
@@ -252,10 +253,7 @@ namespace NXEGameList
             // Menu is the first option
             filters.Add(new FilterInfo { Name = "Menu", FilterType = FilterType.Menu });
             
-            // All Games is second
-            filters.Add(new FilterInfo { Name = "All Games", FilterType = FilterType.All });
-            
-            // Load custom filter presets from the database (skip "All" or "All Games" to avoid duplicates)
+            // Load filter presets from the database (including the built-in "All" filter)
             try
             {
                 var presets = api.Database.FilterPresets;
@@ -263,12 +261,19 @@ namespace NXEGameList
                 {
                     foreach (var preset in presets.OrderBy(p => p.Name))
                     {
-                        // Skip presets that would duplicate our built-in "All Games" filter
-                        if (preset.Name.Equals("All", StringComparison.OrdinalIgnoreCase) ||
-                            preset.Name.Equals("All Games", StringComparison.OrdinalIgnoreCase))
+                        // Skip filters that are hidden in settings
+                        if (settings.HiddenFilterIds != null && settings.HiddenFilterIds.Contains(preset.Id))
                             continue;
                             
-                        filters.Add(new FilterInfo { Name = preset.Name, FilterType = FilterType.Preset, PresetId = preset.Id });
+                        // Handle the "All" filter specially - use FilterType.All instead of Preset
+                        if (preset.Name.Equals("All", StringComparison.OrdinalIgnoreCase))
+                        {
+                            filters.Add(new FilterInfo { Name = "All", FilterType = FilterType.All });
+                        }
+                        else
+                        {
+                            filters.Add(new FilterInfo { Name = preset.Name, FilterType = FilterType.Preset, PresetId = preset.Id });
+                        }
                     }
                 }
             }
@@ -286,18 +291,66 @@ namespace NXEGameList
             OnPropertyChanged("NextFilterName");
         }
 
+        private bool GetFullscreenSetting(string propertyName, bool defaultValue = true)
+        {
+            try
+            {
+                var mainWindow = System.Windows.Application.Current.MainWindow;
+                if (mainWindow == null) return defaultValue;
+                var mainModel = mainWindow.DataContext;
+                if (mainModel == null) return defaultValue;
+                var appSettingsProp = mainModel.GetType().GetProperty("AppSettings");
+                if (appSettingsProp == null) return defaultValue;
+                var appSettings = appSettingsProp.GetValue(mainModel);
+                if (appSettings == null) return defaultValue;
+                var fsProp = appSettings.GetType().GetProperty("Fullscreen");
+                if (fsProp == null) return defaultValue;
+                var fs = fsProp.GetValue(appSettings);
+                if (fs == null) return defaultValue;
+                var prop = fs.GetType().GetProperty(propertyName);
+                if (prop == null) return defaultValue;
+                return (bool)prop.GetValue(fs);
+            }
+            catch { return defaultValue; }
+        }
+
         private void LoadMenuItems()
         {
             menuItems = new List<MenuItemInfo>();
-            menuItems.Add(new MenuItemInfo { Name = "Pick a Random Game", Action = MenuAction.RandomGame, Icon = "🔀" });
-            menuItems.Add(new MenuItemInfo { Name = "Update Game Library", Action = MenuAction.UpdateLibrary, Icon = "🔄" });
+            // Custom extension settings (stored in NXEGameListSettings)
+            if (settings.MainMenuShowRandomGame)
+                menuItems.Add(new MenuItemInfo { Name = "Pick a Random Game", Action = MenuAction.RandomGame, Icon = "🔀" });
+            if (settings.MainMenuShowUpdateLibrary)
+                menuItems.Add(new MenuItemInfo { Name = "Update Game Library", Action = MenuAction.UpdateLibrary, Icon = "🔄" });
             menuItems.Add(new MenuItemInfo { Name = "Settings", Action = MenuAction.Settings, Icon = "⚙" });
-            menuItems.Add(new MenuItemInfo { Name = "Open 3rd Party Client", Action = MenuAction.OpenClients, Icon = "🎮" });
-            menuItems.Add(new MenuItemInfo { Name = "Tools", Action = MenuAction.Tools, Icon = "🔧" });
-            menuItems.Add(new MenuItemInfo { Name = "Extensions", Action = MenuAction.Extensions, Icon = "🧩" });
-            menuItems.Add(new MenuItemInfo { Name = "Exit Playnite", Action = MenuAction.Exit, Icon = "✖" });
-            menuItems.Add(new MenuItemInfo { Name = "Switch to Desktop Mode", Action = MenuAction.SwitchToDesktop, Icon = "🖥" });
-            menuItems.Add(new MenuItemInfo { Name = "Turn Off System", Action = MenuAction.TurnOffSystem, Icon = "⏻" });
+            // Playnite fullscreen settings
+            if (GetFullscreenSetting("MainMenuShowClients", true))
+                menuItems.Add(new MenuItemInfo { Name = "Open 3rd Party Client", Action = MenuAction.OpenClients, Icon = "🎮" });
+            if (GetFullscreenSetting("MainMenuShowTools", true))
+                menuItems.Add(new MenuItemInfo { Name = "Tools", Action = MenuAction.Tools, Icon = "🔧" });
+            if (GetFullscreenSetting("MainMenuShowExtensions", true))
+                menuItems.Add(new MenuItemInfo { Name = "Extensions", Action = MenuAction.Extensions, Icon = "🧩" });
+            if (GetFullscreenSetting("MainMenuShowRestart", true))
+                menuItems.Add(new MenuItemInfo { Name = "Restart Playnite", Action = MenuAction.Restart, Icon = "🔁" });
+            if (GetFullscreenSetting("MainMenuShowMinimize", true))
+                menuItems.Add(new MenuItemInfo { Name = "Minimize", Action = MenuAction.Minimize, Icon = "🗕" });
+            // Custom extension settings
+            if (settings.MainMenuShowExit)
+                menuItems.Add(new MenuItemInfo { Name = "Exit Playnite", Action = MenuAction.Exit, Icon = "✖" });
+            if (settings.MainMenuShowDesktopMode)
+                menuItems.Add(new MenuItemInfo { Name = "Switch to Desktop Mode", Action = MenuAction.SwitchToDesktop, Icon = "🖥" });
+            // Playnite fullscreen settings
+            if (GetFullscreenSetting("MainMenuShowSuspend", true))
+                menuItems.Add(new MenuItemInfo { Name = "Suspend System", Action = MenuAction.Suspend, Icon = "💤" });
+            if (GetFullscreenSetting("MainMenuShowHibernate", true))
+                menuItems.Add(new MenuItemInfo { Name = "Hibernate System", Action = MenuAction.Hibernate, Icon = "🌙" });
+            if (GetFullscreenSetting("MainMenuShowShutdown", true))
+                menuItems.Add(new MenuItemInfo { Name = "Shut Down System", Action = MenuAction.Shutdown, Icon = "⏹" });
+            // Custom extension settings
+            if (settings.MainMenuShowLock)
+                menuItems.Add(new MenuItemInfo { Name = "Lock System", Action = MenuAction.Lock, Icon = "🔒" });
+            if (settings.MainMenuShowLogOut)
+                menuItems.Add(new MenuItemInfo { Name = "Log Out User", Action = MenuAction.LogOut, Icon = "👤" });
         }
 
         public void SelectNextFilter()
@@ -336,6 +389,16 @@ namespace NXEGameList
         {
             // Load filters from database (needs to be done here when database is ready)
             LoadFilters();
+            
+            // Ensure currentFilterIndex is valid
+            if (filters == null || filters.Count == 0)
+            {
+                currentFilterIndex = 0;
+            }
+            else if (currentFilterIndex >= filters.Count)
+            {
+                currentFilterIndex = filters.Count - 1;
+            }
             
             var filter = filters != null && filters.Count > 0 ? filters[currentFilterIndex] : null;
             
@@ -859,7 +922,7 @@ namespace NXEGameList
                                     }
 
                                     // Create and add settings panel
-                                    var settingsPanel = new Xbox360SettingsPanel(api);
+                                    var settingsPanel = new Xbox360SettingsPanel(api, settings);
                                     settingsPanel.Closed += (s, ev) =>
                                     {
                                         // Remove settings panel and show carousel again
@@ -869,6 +932,24 @@ namespace NXEGameList
                                             bottomBarParent.Visibility = Visibility.Visible;
                                         if (settingsPrompts != null && bottomBarGrid != null)
                                             bottomBarGrid.Children.Remove(settingsPrompts);
+                                        // Reload filters and menu items so setting changes take effect immediately
+                                        LoadFilters();
+                                        // If current filter index is out of bounds, reset to first filter
+                                        if (currentFilterIndex >= filters.Count)
+                                        {
+                                            currentFilterIndex = 0;
+                                        }
+                                        LoadMenuItems();
+                                        if (isMenuMode)
+                                        {
+                                            menuIndex = 0;
+                                            selectedIndex = 0;
+                                            UpdateVisibleMenuItems();
+                                            // Notify UI of changes
+                                            OnPropertyChanged("SelectedGameName");
+                                            OnPropertyChanged("CurrentGameIndex");
+                                            OnPropertyChanged("TotalGameCount");
+                                        }
                                         carousel.Focus();
                                         Keyboard.Focus(carousel);
                                     };
@@ -879,9 +960,20 @@ namespace NXEGameList
                             }
 
                             // Fallback: use window approach
-                            var settingsWindow = new Xbox360SettingsWindow(api);
+                            var settingsWindow = new Xbox360SettingsWindow(api, settings);
                             settingsWindow.Owner = System.Windows.Application.Current.MainWindow;
                             settingsWindow.ShowDialog();
+                            // Reload menu items after window closes
+                            LoadMenuItems();
+                            if (isMenuMode)
+                            {
+                                menuIndex = 0;
+                                selectedIndex = 0;
+                                UpdateVisibleMenuItems();
+                                OnPropertyChanged("SelectedGameName");
+                                OnPropertyChanged("CurrentGameIndex");
+                                OnPropertyChanged("TotalGameCount");
+                            }
                         });
                     }
                     catch (Exception ex)
@@ -957,32 +1049,113 @@ namespace NXEGameList
                         System.Windows.Application.Current.Shutdown();
                     }
                     break;
-                case MenuAction.TurnOffSystem:
-                    // Call Playnite's ShutdownSystem command
+                case MenuAction.Restart:
+                    // Restart Playnite by closing this instance and starting a new one with delay
+                    try
+                    {
+                        // Get the Playnite installation path
+                        var playniteDir = Environment.GetEnvironmentVariable("LOCALAPPDATA") + "\\Playnite";
+                        var playniteExe = System.IO.Path.Combine(playniteDir, "Playnite.FullscreenApp.exe");
+                        
+                        // If not found in default location, try to get from current process
+                        if (!System.IO.File.Exists(playniteExe))
+                        {
+                            var currentExe = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                            var currentDir = System.IO.Path.GetDirectoryName(currentExe);
+                            playniteExe = System.IO.Path.Combine(currentDir, "Playnite.FullscreenApp.exe");
+                        }
+                        
+                        // Use cmd to wait 2 seconds then start Playnite (allows current instance to fully close)
+                        if (System.IO.File.Exists(playniteExe))
+                        {
+                            var startInfo = new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = "cmd.exe",
+                                Arguments = $"/c timeout /t 2 /nobreak >nul && \"{playniteExe}\"",
+                                UseShellExecute = false,
+                                CreateNoWindow = true
+                            };
+                            System.Diagnostics.Process.Start(startInfo);
+                        }
+                        
+                        // Close current instance
+                        System.Windows.Application.Current.Shutdown();
+                    }
+                    catch { }
+                    break;
+                case MenuAction.Minimize:
+                    // Minimize the window
                     try
                     {
                         var mainWindow = System.Windows.Application.Current.MainWindow;
                         if (mainWindow != null)
                         {
-                            var dataContext = mainWindow.DataContext;
-                            if (dataContext != null)
-                            {
-                                var cmdProp = dataContext.GetType().GetProperty("ShutdownSystemCommand");
-                                if (cmdProp != null)
-                                {
-                                    var cmd = cmdProp.GetValue(dataContext) as System.Windows.Input.ICommand;
-                                    if (cmd != null && cmd.CanExecute(null))
-                                    {
-                                        cmd.Execute(null);
-                                    }
-                                }
-                            }
+                            mainWindow.WindowState = WindowState.Minimized;
                         }
+                    }
+                    catch { }
+                    break;
+                case MenuAction.Suspend:
+                    // Suspend/Sleep the system using Windows API
+                    try
+                    {
+                        System.Windows.Forms.Application.SetSuspendState(System.Windows.Forms.PowerState.Suspend, false, false);
+                    }
+                    catch 
+                    {
+                        // Fallback: use shutdown command
+                        try
+                        {
+                            System.Diagnostics.Process.Start("shutdown", "/h");
+                        }
+                        catch { }
+                    }
+                    break;
+                case MenuAction.Hibernate:
+                    // Hibernate the system using Windows API
+                    try
+                    {
+                        System.Windows.Forms.Application.SetSuspendState(System.Windows.Forms.PowerState.Hibernate, false, false);
+                    }
+                    catch 
+                    {
+                        // Fallback: use shutdown command
+                        try
+                        {
+                            System.Diagnostics.Process.Start("shutdown", "/h");
+                        }
+                        catch { }
+                    }
+                    break;
+                case MenuAction.Shutdown:
+                    // Shutdown the system
+                    try
+                    {
+                        System.Diagnostics.Process.Start("shutdown", "/s /t 0");
+                    }
+                    catch { }
+                    break;
+                case MenuAction.Lock:
+                    // Lock the system using Windows API
+                    try
+                    {
+                        LockWorkStation();
+                    }
+                    catch { }
+                    break;
+                case MenuAction.LogOut:
+                    // Log out the current user
+                    try
+                    {
+                        System.Diagnostics.Process.Start("shutdown", "/l");
                     }
                     catch { }
                     break;
             }
         }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool LockWorkStation();
 
         private void SelectGame(GameItemViewModel gameVm)
         {
@@ -1139,9 +1312,15 @@ namespace NXEGameList
         OpenClients,
         Tools,
         Extensions,
+        Restart,
+        Minimize,
         Exit,
         SwitchToDesktop,
-        TurnOffSystem
+        Suspend,
+        Hibernate,
+        Shutdown,
+        Lock,
+        LogOut
     }
 
     public class FilterInfo

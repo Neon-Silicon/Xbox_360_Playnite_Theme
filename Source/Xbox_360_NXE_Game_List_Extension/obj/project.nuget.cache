@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "ujBVo2ioZ+A=",
+  "dgSpecHash": "YX9YXMWWBFvDJSwT3H+mz+KKb0Yfa3UEAiPj0MLUlQ/9tRahrNVCwkAQ6MKtgMoIwEAgurqZOWLiLHFWfRR1UQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\jonathan.watkins\\OneDrive\\Playnite Theme\\WIP\\Xbox_360_NXE_Game_List_Extension\\NXEGameList.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jonathan.watkins\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.2\\microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
+    "C:\\Users\\jonathan.watkins\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net462\\1.0.2\\microsoft.netframework.referenceassemblies.net462.1.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

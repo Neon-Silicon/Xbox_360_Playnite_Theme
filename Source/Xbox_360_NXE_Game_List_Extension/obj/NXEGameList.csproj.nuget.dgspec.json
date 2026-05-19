@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj": {}
+    "C:\\Users\\jonathan.watkins\\OneDrive\\Playnite Theme\\WIP\\Xbox_360_NXE_Game_List_Extension\\NXEGameList.csproj": {}
   },
   "projects": {
-    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj": {
+    "C:\\Users\\jonathan.watkins\\OneDrive\\Playnite Theme\\WIP\\Xbox_360_NXE_Game_List_Extension\\NXEGameList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj",
+        "projectUniqueName": "C:\\Users\\jonathan.watkins\\OneDrive\\Playnite Theme\\WIP\\Xbox_360_NXE_Game_List_Extension\\NXEGameList.csproj",
         "projectName": "NXEGameList",
-        "projectPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj",
-        "packagesPath": "C:\\Users\\watki\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\obj\\",
+        "projectPath": "C:\\Users\\jonathan.watkins\\OneDrive\\Playnite Theme\\WIP\\Xbox_360_NXE_Game_List_Extension\\NXEGameList.csproj",
+        "packagesPath": "C:\\Users\\jonathan.watkins\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jonathan.watkins\\OneDrive\\Playnite Theme\\WIP\\Xbox_360_NXE_Game_List_Extension\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\watki\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\jonathan.watkins\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net462"
@@ -32,18 +32,20 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.100"
+        }
       },
       "frameworks": {
         "net462": {
           "targetAlias": "net462",
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102\\RuntimeIdentifierGraph.json"
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.2, )",
+              "autoReferenced": true
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.428\\RuntimeIdentifierGraph.json"
         }
       }
     }
