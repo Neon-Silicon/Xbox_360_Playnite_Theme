@@ -748,13 +748,146 @@ namespace NXEGameList
                     catch { }
                     break;
                 case MenuAction.UpdateLibrary:
-                case MenuAction.Settings:
                 case MenuAction.OpenClients:
                 case MenuAction.Tools:
                 case MenuAction.Extensions:
                     // These commands are on the MainMenuViewModel
                     // We need to open the menu, find the menu window, and invoke the command
                     ExecuteMainMenuCommand(action);
+                    break;
+                case MenuAction.Settings:
+                    // Open custom Xbox 360 settings window
+                    // Hide the carousel and show settings in its place
+                    try
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            // Find the carousel's parent container in the visual tree
+                            var carousel = FindCarouselControl();
+                            if (carousel != null)
+                            {
+                                var parent = VisualTreeHelper.GetParent(carousel) as Panel;
+                                if (parent == null)
+                                {
+                                    parent = VisualTreeHelper.GetParent(carousel) as ContentControl != null
+                                        ? VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(carousel)) as Panel
+                                        : null;
+                                }
+
+                                if (parent != null)
+                                {
+                                    // Hide carousel
+                                    carousel.Visibility = Visibility.Collapsed;
+
+                                    // Find and hide the bottom bar buttons, replace with A/B prompts
+                                    var mainWindow = System.Windows.Application.Current.MainWindow;
+                                    var bottomBar = FindNamedElement(mainWindow, "PART_ButtonPlay") as FrameworkElement;
+                                    FrameworkElement bottomBarParent = null;
+                                    StackPanel settingsPrompts = null;
+                                    Panel bottomBarGrid = null;
+                                    if (bottomBar != null)
+                                    {
+                                        bottomBarParent = VisualTreeHelper.GetParent(bottomBar) as FrameworkElement;
+                                    }
+                                    if (bottomBarParent != null)
+                                    {
+                                        bottomBarParent.Visibility = Visibility.Collapsed;
+                                        bottomBarGrid = VisualTreeHelper.GetParent(bottomBarParent) as Panel;
+                                        
+                                        if (bottomBarGrid != null)
+                                        {
+                                            // Create A Select / B Back prompts matching ButtonBottomMenu style
+                                            settingsPrompts = new StackPanel
+                                            {
+                                                Orientation = Orientation.Horizontal,
+                                                VerticalAlignment = VerticalAlignment.Center,
+                                                HorizontalAlignment = HorizontalAlignment.Left,
+                                                Margin = new Thickness(40, 0, 0, 0),
+                                                Tag = "SettingsPrompts"
+                                            };
+                                            Grid.SetColumn(settingsPrompts, 1);
+
+                                            // Create ButtonEx instances via reflection to match ButtonBottomMenu style
+                                            var btnStyle = System.Windows.Application.Current.TryFindResource("ButtonBottomMenu") as Style;
+                                            var promptA = System.Windows.Application.Current.TryFindResource("ButtonPromptA");
+                                            var promptB = System.Windows.Application.Current.TryFindResource("ButtonPromptB");
+
+                                            // Find ButtonEx type from the fullscreen app assembly
+                                            var btnExType = mainWindow.GetType().Assembly.GetType("Playnite.Controls.ButtonEx")
+                                                ?? mainWindow.GetType().Assembly.GetType("Playnite.FullscreenApp.Controls.ButtonEx");
+                                            
+                                            if (btnExType != null)
+                                            {
+                                                var selectBtn = Activator.CreateInstance(btnExType) as Button;
+                                                if (selectBtn != null)
+                                                {
+                                                    selectBtn.Content = "Select";
+                                                    if (btnStyle != null) selectBtn.Style = btnStyle;
+                                                    var inputHintProp = btnExType.GetProperty("InputHint");
+                                                    if (inputHintProp != null && promptA != null) inputHintProp.SetValue(selectBtn, promptA);
+                                                    selectBtn.Focusable = false;
+                                                    selectBtn.IsHitTestVisible = false;
+                                                    settingsPrompts.Children.Add(selectBtn);
+                                                }
+
+                                                var backBtn = Activator.CreateInstance(btnExType) as Button;
+                                                if (backBtn != null)
+                                                {
+                                                    backBtn.Content = "Back";
+                                                    if (btnStyle != null) backBtn.Style = btnStyle;
+                                                    var inputHintProp = btnExType.GetProperty("InputHint");
+                                                    if (inputHintProp != null && promptB != null) inputHintProp.SetValue(backBtn, promptB);
+                                                    backBtn.Focusable = false;
+                                                    backBtn.IsHitTestVisible = false;
+                                                    settingsPrompts.Children.Add(backBtn);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // Fallback: plain buttons with style
+                                                var selectBtn = new Button { Content = "Select", Focusable = false, IsHitTestVisible = false };
+                                                if (btnStyle != null) selectBtn.Style = btnStyle;
+                                                settingsPrompts.Children.Add(selectBtn);
+
+                                                var backBtn = new Button { Content = "Back", Focusable = false, IsHitTestVisible = false };
+                                                if (btnStyle != null) backBtn.Style = btnStyle;
+                                                settingsPrompts.Children.Add(backBtn);
+                                            }
+
+                                            bottomBarGrid.Children.Add(settingsPrompts);
+                                        }
+                                    }
+
+                                    // Create and add settings panel
+                                    var settingsPanel = new Xbox360SettingsPanel(api);
+                                    settingsPanel.Closed += (s, ev) =>
+                                    {
+                                        // Remove settings panel and show carousel again
+                                        parent.Children.Remove(settingsPanel);
+                                        carousel.Visibility = Visibility.Visible;
+                                        if (bottomBarParent != null)
+                                            bottomBarParent.Visibility = Visibility.Visible;
+                                        if (settingsPrompts != null && bottomBarGrid != null)
+                                            bottomBarGrid.Children.Remove(settingsPrompts);
+                                        carousel.Focus();
+                                        Keyboard.Focus(carousel);
+                                    };
+                                    parent.Children.Add(settingsPanel);
+                                    settingsPanel.Focus();
+                                    return;
+                                }
+                            }
+
+                            // Fallback: use window approach
+                            var settingsWindow = new Xbox360SettingsWindow(api);
+                            settingsWindow.Owner = System.Windows.Application.Current.MainWindow;
+                            settingsWindow.ShowDialog();
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        api.Dialogs.ShowErrorMessage($"Failed to open Xbox 360 Settings: {ex.Message}\n\n{ex.StackTrace}", "Error");
+                    }
                     break;
                 case MenuAction.SwitchToDesktop:
                     // Call Playnite's SwitchToDesktopMode command
@@ -947,6 +1080,34 @@ namespace NXEGameList
 
             OnPropertyChanged("ShowLeftArrow");
             OnPropertyChanged("ShowRightArrow");
+        }
+
+        private FrameworkElement FindCarouselControl()
+        {
+            try
+            {
+                var mainWindow = System.Windows.Application.Current.MainWindow;
+                if (mainWindow == null) return null;
+                return FindNamedElement(mainWindow, "NXEGameList_GameCarousel") as FrameworkElement;
+            }
+            catch { return null; }
+        }
+
+        private DependencyObject FindNamedElement(DependencyObject parent, string name)
+        {
+            if (parent == null) return null;
+            
+            var fe = parent as FrameworkElement;
+            if (fe != null && fe.Name == name) return fe;
+
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                var result = FindNamedElement(child, name);
+                if (result != null) return result;
+            }
+            return null;
         }
 
         protected void OnPropertyChanged(string propertyName)

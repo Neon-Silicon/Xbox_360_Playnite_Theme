@@ -3,6 +3,7 @@ using Playnite.SDK.Events;
 using Playnite.SDK.Plugins;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace NXEGameList
@@ -36,6 +37,7 @@ namespace NXEGameList
             settingsArgs.SettingsRoot = "Settings";
             AddSettingsSupport(settingsArgs);
         }
+
 
         public override Control GetGameViewControl(GetGameViewControlArgs args)
         {

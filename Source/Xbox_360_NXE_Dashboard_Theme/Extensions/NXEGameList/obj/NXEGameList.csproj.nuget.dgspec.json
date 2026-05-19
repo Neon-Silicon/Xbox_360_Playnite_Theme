@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Test\\Extensions\\NXEGameList\\NXEGameList.csproj": {}
+    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj": {}
   },
   "projects": {
-    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Test\\Extensions\\NXEGameList\\NXEGameList.csproj": {
+    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Test\\Extensions\\NXEGameList\\NXEGameList.csproj",
+        "projectUniqueName": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj",
         "projectName": "NXEGameList",
-        "projectPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Test\\Extensions\\NXEGameList\\NXEGameList.csproj",
+        "projectPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj",
         "packagesPath": "C:\\Users\\watki\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Test\\Extensions\\NXEGameList\\obj\\",
+        "outputPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\watki\\AppData\\Roaming\\NuGet\\NuGet.Config"
