@@ -1,0 +1,51 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj",
+        "projectName": "NXEGameList",
+        "projectPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\NXEGameList.csproj",
+        "packagesPath": "C:\\Users\\watki\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\watki\\AppData\\Local\\Playnite\\Themes\\Fullscreen\\Xbox 360\\Extensions\\NXEGameList\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\watki\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net462"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net462": {
+            "targetAlias": "net462",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net462": {
+          "targetAlias": "net462",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
